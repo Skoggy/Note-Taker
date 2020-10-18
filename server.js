@@ -9,7 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 
-// require('./routes/apiRoutes')(app);
+require('./routes/apiRoutes')(app);
 require("./routes/htmlRoutes")(app);
 
 
