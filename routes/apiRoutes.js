@@ -35,24 +35,22 @@ function apiRoutes(app) {
         try {
 
             const note = await readFileAsync(notes, "utf-8")
-            const uniqueID = uuid();
+            const id = uuid();
 
 
-            req.body.uniqueID = uniqueID
+            req.body.id = id
 
             const parseNote = JSON.parse(note)
-
+            console.log("hey")
             parseNote.push(req.body)
 
-            //  res.json(console.log("hey"))
+
 
             await writeFileAsync(notes, JSON.stringify(parseNote, null, 2))
 
-            console.log(note)
 
             res.json(req.body)
 
-            console.log(req.body)
 
         } catch (err) {
             if (err) {
