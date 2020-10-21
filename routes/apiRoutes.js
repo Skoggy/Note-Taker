@@ -8,6 +8,7 @@ const { parse } = require('path');
 const writeFileAsync = util.promisify(fs.writeFile)
 const readFileAsync = util.promisify(fs.readFile)
 
+const allNotes = require("../db/db.json")
 const notes = "./db/db.json"
 
 function apiRoutes(app) {
@@ -36,10 +37,7 @@ function apiRoutes(app) {
 
             const note = await readFileAsync(notes, "utf-8")
             const id = uuid();
-
-
             req.body.id = id
-
             const parseNote = JSON.parse(note)
             console.log("hey")
             parseNote.push(req.body)
@@ -47,10 +45,7 @@ function apiRoutes(app) {
 
 
             await writeFileAsync(notes, JSON.stringify(parseNote, null, 2))
-
-
             res.json(req.body)
-
 
         } catch (err) {
             if (err) {
@@ -60,10 +55,49 @@ function apiRoutes(app) {
     })
 
 
+    app.delete('/api/notes/:id', async function (req, res) {
+        try {
+            const note = await readFileAsync(notes, "utf-8")
+            const id = req.params.id;
+
+            const parseNote = JSON.parse(note)
+
+            parseNote.forEach(value => {
+                if (value.id === id) {
+                    parseNote.splice(parseNote.indexOf(value), 1);
+                    return
+
+                }
+            });
 
 
+            await writeFileAsync(notes, JSON.stringify(parseNote, null, 2))
+            res.json(req.body)
+
+
+        } catch (err) {
+            throw err;
+        }
+
+        // allNotes.filter(function (note) {
+        //   return note.id !== req.params.id;
+        // });
+        // const note = await readFileAsync(notes, "utf-8")
+
+
+
+
+        //  console.log(JSON.stringify(data));
+        //  res.status(200);
+
+        //   return res.send("Removed");
+    });
 
 }
+
+
+
+
 
 module.exports = apiRoutes;
 
